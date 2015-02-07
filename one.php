@@ -1,11 +1,41 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+function __autoload($class_name)
+{
+    include "./include/{$class_name}.inc";
+}
 
-    phpinfo();
+include './hardware/GPIO.inc';
 
+
+$gpio = GPIO::_getInstance();
+
+if (array_key_exists('state', $_GET))
+{
+    printf($gpio->queryState());
+}
+else
+{
+    ?>
+
+
+    <form id="swtich" action="<?php $_SERVER["PHP_SELF"] ?>" method="post">
+        <input class="button buzz-out color-red size_up"  name="switch"  type="submit" value="Switch"> <br/>
+    </form>
+
+    <?php
+    if(filter_input(INPUT_POST, "switch"))
+    {
+       $state=  $gpio->toggleState();
+        printf("Current State >>> %s", $state);
+        
+    }
+    else
+    {
+        printf("Welcome to the ESP8266 switch board");
+    }
+    
+}
 ?>
+
+
